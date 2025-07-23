@@ -25,8 +25,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 
-router.get('/' ,(req , res)=>{
-      res.send("hey")
+router.get('/create' ,(req , res)=>{
+      res.render("createproduct.ejs")
 })
 
 module.exports = router;

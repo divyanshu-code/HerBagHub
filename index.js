@@ -16,19 +16,32 @@ const db = require('./config/mongoose-connection')
 const userRouters= require('./routes/userRouters')
 const productRouters = require('./routes/productRouters')
 const ownerRouters = require('./routes/ownerRouters')
-const login= require('./routes/index')
+const login= require('./routes/logIn')
+const expressSession = require('express-session');
+const flash = require('connect-flash');
+
+require('dotenv').config()                // this will acquire all varibles of env files
 
 app.use(express.urlencoded({extended : true}))
 app.use(express.json());
 app.use(cookie())
 app.use(express.static(path.join(__dirname , 'Public')))
+app.use(expressSession({
+
+    resave : false,                      // it ensure that dont save again and again if updation don't happen
+
+    saveUninitialized : false,           // it ensure that if a user that is not loggedin then dont create his/her session.
+
+    secret : process.env.JWT_KEY ,
+}))
+
+app.use(flash())                    // flash  work under express session that why before using flash we have to create a session 
 
 app.set('view engine' , 'ejs');
 
+app.use('/' , login)
 app.use('/user' , userRouters)
 app.use('/owner' , ownerRouters)
 app.use('/product' , productRouters)
 
-app.use('/' , login)
-
-app.listen(5173)
+app.listen(3000)
